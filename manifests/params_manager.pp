@@ -417,8 +417,9 @@ class wazuh::params_manager {
             $ossec_service_provider = undef
             $default_local_files = [
               { 'location' => '/var/log/messages' , 'log_format' => 'syslog' },
-              { 'location' => '/var/log/dnf.log', 'log_format' => 'syslog' }, # Not in syslog. In plain text
-              { 'location' => '/var/log/secure', 'log_format' => 'syslog' },
+              { 'location' => '/var/log/dnf.log', 'log_format' => 'syslog' }, # Not in syslog 
+              { 'location' => '/var/log/kern.log', 'log_format' => 'syslog' },
+              { 'location' => '/var/log/auth.log', 'log_format' => 'syslog' },
               {  'location' => '/var/ossec/logs/active-responses.log', 'log_format' => 'syslog'},
             ]
           } else {
@@ -478,16 +479,7 @@ class wazuh::params_manager {
                 }
               }
             }
-            'Rocky': {
-              if $::operatingsystemrelease =~ /^9/ {
-                $ossec_service_provider = 'systemd'
-                $api_service_provider = 'systemd'
-                $wodle_openscap_content = undef
-              } else {
-                fail('This ossec module has not been tested on your Rocky Linux version')
-              }
-            }
-            /^(RedHat|OracleLinux)$/: {
+            /^(RedHat|OracleLinux|Rocky.Linux)$/: {
               if ( $::operatingsystemrelease =~ /^6.*/ ) {
                 $ossec_service_provider = 'redhat'
                 $api_service_provider = 'redhat'
