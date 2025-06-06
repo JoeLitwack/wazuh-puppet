@@ -409,6 +409,22 @@ class wazuh::params_manager {
               $server_package = 'wazuh-manager'
               $wodle_openscap_content = undef
             }
+        'Rocky': {
+          if $::operatingsystemrelease =~ /^9/ {
+            $agent_service  = 'wazuh-agent'
+            $agent_package  = 'wazuh-agent'
+            $service_has_status  = false
+            $ossec_service_provider = undef
+            $default_local_files = [
+              { 'location' => '/var/log/messages' , 'log_format' => 'syslog' },
+              { 'location' => '/var/log/dnf.log', 'log_format' => 'syslog' }, # Not in syslog. In plain text
+              { 'location' => '/var/log/secure', 'log_format' => 'syslog' },
+              {  'location' => '/var/ossec/logs/active-responses.log', 'log_format' => 'syslog'},
+            ]
+          } else {
+            fail('This ossec module has not been tested on your Rocky Linux version')
+          }
+        }
         default: {
           fail("Module ${module_name} is not supported on ${::operatingsystem}")
         }
