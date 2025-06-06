@@ -479,7 +479,7 @@ class wazuh::params_manager {
                 }
               }
             }
-            /^(RedHat|OracleLinux|Rocky Linux)$/: {
+            /^(RedHat|OracleLinux|Rocky)$/: {
               if ( $::operatingsystemrelease =~ /^6.*/ ) {
                 $ossec_service_provider = 'redhat'
                 $api_service_provider = 'redhat'
