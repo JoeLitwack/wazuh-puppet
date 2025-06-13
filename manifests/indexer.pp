@@ -15,6 +15,7 @@ class wazuh::indexer (
   $indexer_path_data = '/var/lib/wazuh-indexer',
   $indexer_path_logs = '/var/log/wazuh-indexer',
   $indexer_path_certs = '/etc/wazuh-indexer/certs',
+  $manage_indexer_certs_with_puppet = true
   $indexer_security_init_lockfile = '/var/tmp/indexer-security-init.lock',
   $full_indexer_reinstall = false, # Change to true when whant a full reinstall of Wazuh indexer
 
@@ -57,21 +58,23 @@ class wazuh::indexer (
     mode   => '0500',
   }
 
-  [
-   "indexer-$indexer_node_name.pem",
-   "indexer-$indexer_node_name-key.pem",
-   'root-ca.pem',
-   'admin.pem',
-   'admin-key.pem',
-  ].each |String $certfile| {
-    file { "${indexer_path_certs}/${certfile}":
-      ensure  => file,
-      owner   => $indexer_fileuser,
-      group   => $indexer_filegroup,
-      mode    => '0400',
-      replace => true,
-      recurse => remote,
-      source  => "puppet:///modules/archive/${certfile}",
+  if $manage_indexer_certs_with_puppet {
+    [
+    "indexer-$indexer_node_name.pem",
+    "indexer-$indexer_node_name-key.pem",
+    'root-ca.pem',
+    'admin.pem',
+    'admin-key.pem',
+    ].each |String $certfile| {
+      file { "${indexer_path_certs}/${certfile}":
+        ensure  => file,
+        owner   => $indexer_fileuser,
+        group   => $indexer_filegroup,
+        mode    => '0400',
+        replace => true,
+        recurse => remote,
+        source  => "puppet:///modules/archive/${certfile}",
+      }
     }
   }
 
