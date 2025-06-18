@@ -24,7 +24,8 @@ class wazuh::indexer (
   $indexer_discovery_hosts = [], # Empty array for single-node configuration
   $indexer_cluster_initial_master_nodes = ['node-1'],
   $indexer_cluster_CN = ['node-1'],
-
+  $indexer_cluster_CN_prepend = 'indexer',
+  
   # JVM options
   $jvm_options_memory = '1g',
 ) {
@@ -60,8 +61,8 @@ class wazuh::indexer (
 
   if $manage_indexer_certs_with_puppet {
     [
-    "indexer-$indexer_node_name.pem",
-    "indexer-$indexer_node_name-key.pem",
+    "${indexer_cluster_CN_prepend}-$indexer_node_name.pem",
+    "${indexer_cluster_CN_prepend}-$indexer_node_name-key.pem",
     'root-ca.pem',
     'admin.pem',
     'admin-key.pem',
