@@ -61,8 +61,8 @@ class wazuh::indexer (
 
   if $manage_indexer_certs_with_puppet {
     [
-    "${indexer_cluster_CN_prepend}-$indexer_node_name.pem",
-    "${indexer_cluster_CN_prepend}-$indexer_node_name-key.pem",
+    "$indexer_node_name.pem",
+    "$indexer_node_name-key.pem",
     'root-ca.pem',
     'admin.pem',
     'admin-key.pem',
