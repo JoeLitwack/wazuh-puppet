@@ -19,6 +19,7 @@ class wazuh::filebeat_oss (
   $filebeat_fileuser = 'root',
   $filebeat_filegroup = 'root',
   $filebeat_path_certs = '/etc/filebeat/certs',
+  $manage_filebeat_certs = true,
 ) {
 
   package { 'filebeat':
@@ -91,15 +92,17 @@ class wazuh::filebeat_oss (
     "manager-${wazuh_node_name}-key.pem" => 'filebeat-key.pem',
     'root-ca.pem'    => 'root-ca.pem',
   }
-  $_certfiles.each |String $certfile_source, String $certfile_target| {
-    file { "${filebeat_path_certs}/${certfile_target}":
-      ensure  => file,
-      owner   => $filebeat_fileuser,
-      group   => $filebeat_filegroup,
-      mode    => '0400',
-      replace => true,
-      recurse => remote,
-      source  => "puppet:///modules/archive/${certfile_source}",
+  if $manage_filebeat_certs {
+    $_certfiles.each |String $certfile_source, String $certfile_target| {
+      file { "${filebeat_path_certs}/${certfile_target}":
+        ensure  => file,
+        owner   => $filebeat_fileuser,
+        group   => $filebeat_filegroup,
+        mode    => '0400',
+        replace => true,
+        recurse => remote,
+        source  => "puppet:///modules/archive/${certfile_source}",
+      }
     }
   }
 
