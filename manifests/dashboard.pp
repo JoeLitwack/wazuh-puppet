@@ -10,6 +10,7 @@ class wazuh::dashboard (
   $dashboard_path_certs = '/etc/wazuh-dashboard/certs',
   $dashboard_fileuser = 'wazuh-dashboard',
   $dashboard_filegroup = 'wazuh-dashboard',
+  $manage_certs = true,
 
   $dashboard_server_port = '443',
   $dashboard_server_host = '0.0.0.0',
@@ -62,19 +63,21 @@ class wazuh::dashboard (
     mode   => '0500',
   }
 
-  [
-    'dashboard.pem',
-    'dashboard-key.pem',
-    'root-ca.pem',
-  ].each |String $certfile| {
-    file { "${dashboard_path_certs}/${certfile}":
-      ensure  => file,
-      owner   => $dashboard_fileuser,
-      group   => $dashboard_filegroup,
-      mode    => '0400',
-      replace => true,
-      recurse => remote,
-      source  => "puppet:///modules/archive/${certfile}",
+  if $manage_certs {
+    [
+      'dashboard.pem',
+      'dashboard-key.pem',
+      'root-ca.pem',
+    ].each |String $certfile| {
+      file { "${dashboard_path_certs}/${certfile}":
+        ensure  => file,
+        owner   => $dashboard_fileuser,
+        group   => $dashboard_filegroup,
+        mode    => '0400',
+        replace => true,
+        recurse => remote,
+        source  => "puppet:///modules/archive/${certfile}",
+      }
     }
   }
 
