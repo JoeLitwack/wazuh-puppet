@@ -242,3 +242,6 @@ hosts:
       password: <%= api_profile['password'] %>
       run_as: false
 <% end -%>
+<% if @enrollment_dns and !@enrollment_dns.empty? -%>
+enrollment.dns: <%= @enrollment_dns %>
+<% end -%>

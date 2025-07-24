@@ -11,6 +11,7 @@ class wazuh::dashboard (
   $dashboard_fileuser = 'wazuh-dashboard',
   $dashboard_filegroup = 'wazuh-dashboard',
   $manage_certs = true,
+  $enrollment_dns = undef,
 
   $dashboard_server_port = '443',
   $dashboard_server_host = '0.0.0.0',
